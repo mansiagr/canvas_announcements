@@ -1,0 +1,68 @@
+<h2><span style="font-size: 24pt;">Weekly Assignment Update</span><br></h2>
+
+<p><strong><br><span style="text-decoration: underline;">If you have received an extension, please double check what your due date is.</span><br></strong>
+<strong><br><span style="text-decoration: underline;">All due dates and times are shown in PST.</span><br></strong>
+
+{% set i = 0 %}
+<h3><br><strong>Assignments due today: <br></strong></h3>
+{% for assignment in item_list -%}
+    {%- if assignment.lock_at ==  none -%}
+        <br /><ul><li style="list-style-type: none;"><ul><li>{{ url_today[loop.index-1] }} {{ assignment.name}}</a> is due on <span style="text-decoration: underline;">{{ assignment.due_at_date.strftime('%m/%d/%Y %I:%M%p') }} PST<br></span></li></ul></li></ul>
+    {%- else -%}
+        <br /><ul><li style="list-style-type: none;"><ul><li>{{ url_today[loop.index-1] }} {{ assignment.name }}</a> is due on <span style="text-decoration: underline;">{{ assignment.due_at_date.strftime('%m/%d/%Y %I:%M%p') }} PST</span> until <span style="text-decoration: underline;">{{ assignment.lock_at_date.strftime('%m/%d/%Y %I:%M%p') }} PST<br></span></li></ul></li></ul>
+    {%- endif -%}
+
+{%- endfor -%}
+
+{%- if item_num_today == 1 -%}
+    <br />&nbsp; &nbsp; &nbsp; &nbsp; Nothing due today<br>
+{%- endif %}
+
+<h3><br><strong>Assignments due tommorrow:<br></strong></h3>
+{%- for assignment in item_list_tomorrow -%}
+    {%- if assignment.lock_at ==  none -%}
+        <br /><ul><li style="list-style-type: none;"><ul><li>{{ url_tomorrow[loop.index-1] }} {{ assignment.name}}</a> is due on <span style="text-decoration: underline;">{{ assignment.due_at_date.strftime('%m/%d/%Y %I:%M%p') }} PST<br></span></li></ul></li></ul>
+    {%- else -%}
+        <br /><ul><li style="list-style-type: none;"><ul><li>{{ url_tomorrow[loop.index-1] }} {{ assignment.name }}</a> is due on <span style="text-decoration: underline;">{{ assignment.due_at_date.strftime('%m/%d/%Y %I:%M%p') }} PST</span> until <span style="text-decoration: underline;">{{ assignment.lock_at_date.strftime('%m/%d/%Y %I:%M%p') }} PST<br></span></li></ul></li></ul>
+    {%- endif -%}
+{%- endfor -%}
+
+{%- if item_num_tomorrow == 1 -%}
+    <br />&nbsp; &nbsp; &nbsp; &nbsp; Nothing due tomorrow<br>
+{%- endif %}
+
+{% set ns = namespace(counter = 0) %}
+{% for k in range(1,temp) %}
+    {% set ns.counter = 0 %}
+    <h3><br><strong>Assignments due in {{ k }} week(s)<br></strong></h3>
+    {% for key,value in item_list_weekly.items()  %}
+        {% if key == k %}
+            {% for list_value in value %}
+                {%- if list_value.lock_at ==  none -%}
+                    {% set ns.counter = 1 %}
+                    {{ counter }}
+                    <br /><ul><li style="list-style-type: none;"><ul><li>{{ url_weekly[loop.index-1] }} {{ list_value.name}}</a> is due on <span style="text-decoration: underline;">{{ list_value.due_at_date.strftime('%m/%d/%Y %I:%M%p') }} PST<br></span></li></ul></li></ul>
+                {%- else -%}
+                    {% set ns.counter = 1 %}
+                    {{ counter }}
+                    <br /><ul><li style="list-style-type: none;"><ul><li>{{ url_weekly[loop.index-1] }} {{ list_value.name }}</a> is due on <span style="text-decoration: underline;">{{ list_value.due_at_date.strftime('%m/%d/%Y %I:%M%p') }} PST</span> until <span style="text-decoration: underline;">{{ list_value.lock_at_date.strftime('%m/%d/%Y %I:%M%p') }} PST<br></span></li></ul></li></ul>
+                {%- endif -%}
+            {%- endfor -%}
+        {% endif %}
+    {%- endfor -%}
+    {{ counter }}
+    {% if ns.counter == 0 %}
+        <br />&nbsp; &nbsp; &nbsp; &nbsp; Nothing due this week.<br>
+    {% endif %}
+{%- endfor -%}
+
+<h3><br><strong>Assignments without a due date:<br></strong></h3>
+{% if item_list_due|length %}
+    {% for assignment in range(list_len) -%}
+        <br /><ul><li style="list-style-type: none;"><ul><li>{{ url_due[assignment] }} {{ item_list_due[assignment] }} </a><br></li></ul></li></ul>
+    {% endfor %}
+{% else %}
+    <br />&nbsp; &nbsp; &nbsp; &nbsp;None<br>
+{% endif %}
+
+</p>
